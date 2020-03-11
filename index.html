@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Index</title>
+	<link rel="stylesheet" type="text/css" href="bootstrap/3.3.7/css/bootstrap.min.css">
+
+	<style type="text/css">
+		
+		#idValidateFirstId {
+			color: red;
+		}
+
+		#idValidateSecondId {
+			color: red;
+		}
+
+		#idValidateThirdId {
+			color: red;
+		}
+
+		#idValidateEmailId {
+			color: red;
+		}
+
+		#idResult {
+			color: maroon;
+			font-style: bold;
+			font-size: 30pt;
+		}
+
+		#idComputeBtn {
+			width: 100px;
+		}
+
+		#idClearBtn {
+			width: 100px;
+		}
+
+		#idAlignContainerHavingInputFields {
+			margin: 5%;			
+		}
+
+	</style>
+</head>
+
+<body>
+<div class="container-fluid">
+
+	<!-- Pure Intermediate with Factory, Services and Controller with basic combos -->
+	<div ng-app="rootApplication" ng-controller="angularController" ng-init="result='No Result'">
+		<form name="angularForm" class="form-group">
+			<h1 class="jumbotron"  align="center">Understanding AngularJs</h1>
+
+			<div align="center">
+				<div class="row">
+					<div align="right" class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+						<h3>Type 1:</h3>		
+					</div>
+					<div align="left" class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+						<h3>Addition</h3>		
+					</div>
+				</div>
+				
+				<div class="row">
+					<div align="right" class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+						<h3>Type 2:</h3>		
+					</div>
+					<div align="left" class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+						<h3>Subtraction</h3>		
+					</div>
+				</div>
+
+				<div class="row">
+					<div align="right" class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+						<h3>Type 3:</h3>		
+					</div>
+					<div align="left" class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+						<h3>Multiplication</h3>		
+					</div>
+				</div>
+
+			</div>
+
+			<div id="idAlignContainerHavingInputFields">
+				<div>
+					<label>First Number: </label><br>
+					<input type="number" ng-model="fieldOne" name="first" class="form-control" required><br>
+					<span id="idValidateFirstId" ng-show="angularForm.first.$error.number">
+						{{validateFirstField}}
+					</span><br>
+
+					<label>Second Number: </label><br>
+					<input type="number" ng-model="fieldTwo" name="second" class="form-control" required><br>
+					<span id="idValidateSecondId" ng-show="angularForm.second.$error.number">
+						{{validateSecondField}}
+					</span><br>
+
+					<label>Choice: </label><br>
+					<input type="number" ng-model="fieldThree" name="third" class="form-control" required><br>
+					<span id="idValidateThirdId" ng-show="angularForm.third.$error.number">
+						{{validateThirdField}}
+					</span><br>
+
+					<label>Send Email: </label><br>
+					<input type="email" ng-model="fieldFour" name="sendEmail" class="form-control" required><br>
+					<span id="idValidateEmailId" ng-show="angularForm.sendEmail.$error.email">
+						{{validateEmailId}}
+					</span><br>
+				</div>
+
+				<div align="center">
+					<input id="idComputeBtn" type="submit" class="btn btn-primary" ng-click="computeOperation()" value="Compute" /><br><br>
+					<p id="idClearBtn" align="center" class="btn btn-primary" ng-click="clearInputs()">Clear</p><br>
+				</div>
+
+				<br>
+
+				<div class="panel panel-default" align="center">
+					<h4>Arithmetic Operation Result: </h4>
+					<div class="panel-heading" align="center">
+						<div class="panel-title" align="center">
+							<p id="idResult" ng-bind="result"></p>		
+						</div>
+					</div>
+				</div>
+			
+			</div>
+		</form>
+	</div>
+	
+	<div class="jumbotron" align="center">
+		<h2>&copy;Copyrights2020 All Rights Reserved.</h2>
+	</div>	
+</div>
+
+<script src="angularjs/angular.min.js"></script>
+<script type="text/javascript">
+	var rootApplication = angular.module("rootApplication", []);
+
+	rootApplication.factory('arithmeticOperation', function() {
+		var factoryMethodToReturnValues = {};
+
+		factoryMethodToReturnValues.computeOperation = function(inputOne, inputTwo, instrOperation) {
+
+			if(instrOperation == "1") {
+				return inputOne + inputTwo;
+			} else if(instrOperation == "2") {
+				return inputOne - inputTwo;
+			} else if(instrOperation == "3") {
+				return inputOne * inputTwo;
+			} else {
+				console.log("Invalid input typed");
+				return "Invalid input typed";
+			}
+			
+		}
+
+		return factoryMethodToReturnValues;
+	});
+
+	rootApplication.service('computeOperationService', function(arithmeticOperation) {
+
+		this.computeOperation = function(a,b,instrOperation) {
+			return arithmeticOperation.computeOperation(a, b, instrOperation);	
+		}
+		
+	});
+
+	rootApplication.controller('angularController', function($scope, computeOperationService) {
+
+		$scope.computeOperation = function() {
+
+			$scope.result = computeOperationService.computeOperation($scope.fieldOne, $scope.fieldTwo, $scope.fieldThree);
+		}
+
+		$scope.clearInputs = function() {
+			$scope.fieldOne = "";
+			$scope.fieldTwo = "";
+			$scope.fieldThree = "";
+			$scope.fieldFour = "";
+			$scope.result = "Results Cleared";
+		}
+
+		$scope.validateFirstField = "Please fill numeric input for first field";
+		$scope.validateSecondField = "Please fill numeric input for second field";
+		$scope.validateThirdField = "Please fill numeric input for choice"; 
+		$scope.validateEmailId = "Enter Valid Email";
+
+	});
+
+</script>
+
+</body>
+</html>
